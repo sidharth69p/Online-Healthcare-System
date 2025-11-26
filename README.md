@@ -1,181 +1,184 @@
-Online Healthcare Management System (Java – Swing + MySQL)
+# **Online Healthcare Management System (Java – Swing + MySQL)**
 
-A full-featured healthcare management application built with Java Swing, FlatLaf, MySQL, Gradle, JDBC, and a clean service–DAO architecture.
+A full-featured healthcare management platform built using **Java Swing**, **FlatLaf themes**, **JDBC**, **MySQL**, **Multithreading**, **JFreeChart**, **PDF export**, and a clean **layered architecture**.
 
-🚀 Project Overview
+---
 
-This system digitizes major healthcare tasks, allowing:
+## 🚀 Overview
 
-Patients to book/manage appointments
+This system digitalizes core operations of a healthcare center, allowing:
 
-Doctors to manage schedules & records
+### **Patients**
 
-Admins to manage users, appointments, and analytics
+* Book appointments
+* View history
+* Export appointments as PDF
 
-The project includes a modern UI, database connectivity, PDF export, multithreading, and charts.
+### **Doctors**
 
-🎨 Features
-🔐 Role-Based Login
+* Manage daily schedules
+* View patient records
 
-Admin login
+### **Admins**
 
-Doctor login
+* Manage users
+* Manage appointments
+* Access analytics
 
-Patient login
+---
 
-Supports BCrypt hashing
+## 🎨 UI & Experience
 
-Fallback demo users for offline testing
+* Built using **Java Swing**
+* Modern **FlatLaf Light + Dark Theme Toggle**
+* Clean, responsive layouts
+* Role-based dashboards
 
-🖥 Modern UI
+---
 
-Java Swing (FlatLaf Modern Light/Dark theme toggle)
+## 🔐 Authentication
 
-Clean and minimal interface
+* Role-based login system
+* Supports **BCrypt** hashing
+* Demo accounts included (offline mode)
+* Config-based credentials (no hardcoded secrets)
 
-Separate dashboards for each user type
+---
 
-⏳ Appointment Management
+## 🏗 Architecture (Layered)
 
-Patient booking (with conflict prevention)
+```
+UI Layer  →  Service Layer  →  DAO Layer  →  Database
+```
 
-Doctor schedule view
+### **Folders**
 
-Admin full appointment list
+* `ui/` → All screens
+* `model/` → User, Doctor, Patient, Appointment
+* `dao/` → Interfaces + JDBC implementations
+* `service/` → Business logic
+* `util/` → Config, DB Connection, Exceptions
+* `sql/` → Database schema
 
-Synchronized slot blocking using multithreading
+---
 
-📚 Medical Records (Doctor)
+## 📚 Features
 
-View patient details
+### ✔ Appointment Booking
 
-Manage and update medical notes
+* Conflict prevention using synchronized locks
+* Book, view, manage appointments
+* Doctor availability handled
 
-(Extendable for future EHR system)
+### ✔ PDF Export (Patient)
 
-📄 PDF Export
+* Appointment history → clean PDF
+* Powered by **PDFBox**
 
-Patients can export appointment history using PDFBox.
+### ✔ Analytics (Admin)
 
-📊 Analytics (Admin)
+* Bar charts via **JFreeChart**
+* Appointment statistics
 
-Simple bar chart using JFreeChart
+### ✔ Multithreading
 
-Shows appointments per doctor (demo data)
+* `SwingWorker` for smooth UI
+* `ScheduledExecutorService` for heartbeat/scheduler tasks
+* Prevents UI freezing
 
-Fully expandable for real statistics
+---
 
-⚙ Database Layer
+## 🗄 Database Schema
 
-Full DAO + JDBC:
+Included in:
 
-Users
-
-Doctors
-
-Patients
-
-Appointments
-
-PreparedStatements used (safe from SQL injection).
-
-🏗 Architecture
-Layered Architecture
-UI Layer → Service Layer → DAO Layer → Database
-
-Packages
-app/         → Main entry point  
-ui/          → All Swing UI screens  
-model/       → POJO classes (User, Appointment…)  
-dao/         → DAO interfaces + JDBC implementations  
-service/     → Business logic (booking, scheduling)  
-util/        → Config, DBConnection, Exceptions  
-sql/         → SQL schema  
-
-🗄 Database Schema
-
-Run this file to create all tables:
-
+```
 sql/schema_full.sql
+```
 
+Tables:
 
-Includes tables:
+* roles
+* users
+* doctors
+* patients
+* appointments
 
-roles
+Includes UNIQUE constraint to prevent double booking.
 
-users
+---
 
-doctors
+## 🧰 Tech Stack
 
-patients
+* **Java 17**
+* **Swing + FlatLaf**
+* **Gradle**
+* **MySQL + JDBC**
+* **BCrypt**
+* **JFreeChart**
+* **PDFBox**
 
-appointments
+---
 
-With UNIQUE constraint on appointment slots.
+## ▶ How to Run
 
-🧵 Multithreading
+### **1. Install JDK 17+**
 
-ScheduledExecutorService for background heartbeat
+### **2. (Optional) Setup MySQL database**
 
-SwingWorker for non-blocking UI updates
+Edit `config.properties`:
 
-synchronized locking for appointment booking conflict detection
+```
+db.url=jdbc:mysql://localhost:3306/online_healthcare
+db.username=YOUR_USER
+db.password=YOUR_PASS
+```
 
-🧰 Tech Stack
+### **3. Run using Gradle**
 
-Language: Java 17
-UI: Swing + FlatLaf
-Database: MySQL
-Build Tool: Gradle
-Libraries:
-
-FlatLaf
-
-MySQL Connector
-
-BCrypt
-
-PDFBox
-
-JFreeChart
-
-▶️ How to Run
-Step 1: Install JDK 17+
-Step 2: Install MySQL (optional)
-
-If you want real DB data:
-
-Update src/main/resources/config.properties
-
-Run schema_full.sql
-
-Step 3: Run project
+```
 ./gradlew run
-
+```
 
 or on Windows:
 
+```
 gradlew.bat run
+```
 
-📌 Demo Login Credentials
+---
 
-(Works even without database)
+## 🧪 Demo Credentials (No Database Needed)
 
-Role	Email	Password
-Admin	admin@hms.com
-	admin123
-Doctor	doctor@hms.com
-	doctor123
-Patient	patient@hms.com
-	patient123
-🧭 Future Enhancements
+| Role    | Email                                     | Password   |
+| ------- | ----------------------------------------- | ---------- |
+| Admin   | [admin@hms.com](mailto:admin@hms.com)     | admin123   |
+| Doctor  | [doctor@hms.com](mailto:doctor@hms.com)   | doctor123  |
+| Patient | [patient@hms.com](mailto:patient@hms.com) | patient123 |
 
-Doctor calendar view
+---
 
-Admin analytics dashboard v2
+## 🚀 Future Enhancements
 
-Email/SMS notifications
+* Doctor calendar UI
+* Admin analytics v2
+* Email/SMS notifications
+* User registration module
+* Cloud deployment
 
-Cloud deployment
+---
 
-User registration system
+## 📌 Conclusion
+
+This project demonstrates:
+
+* OOP
+* JDBC mastery
+* Clean architecture
+* Modern UI
+* Multithreaded processing
+* Real-world healthcare workflow simulation
+
+Perfect for academic evaluation and practical deployment.
+
+---
