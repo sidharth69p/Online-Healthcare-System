@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'com.onlinehealth'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = '17'
+targetCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.formdev:flatlaf:3.0'
+    implementation 'org.mindrot:jbcrypt:0.4'
+    implementation 'mysql:mysql-connector-java:8.1.0'
+    implementation 'org.jfree:jfreechart:1.5.3'
+    implementation 'org.apache.pdfbox:pdfbox:2.0.27'
+}
+
+application {
+    mainClass = 'app.MainApp'
+}
