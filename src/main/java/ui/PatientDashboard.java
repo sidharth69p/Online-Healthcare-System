@@ -65,39 +65,122 @@ public class PatientDashboard extends JFrame {
             }
         }; w.execute();
     }
-
     private void openBookingDialog() {
-        JPanel p = new JPanel(new GridLayout(5,2));
-        JTextField doctorId = new JTextField(); JTextField date = new JTextField(LocalDate.now().toString()); JTextField time = new JTextField(LocalTime.of(10,0).toString());
-        JTextArea notes = new JTextArea(3,20);
-        p.add(new JLabel("Doctor ID:")); p.add(doctorId);
-        p.add(new JLabel("Date (YYYY-MM-DD):")); p.add(date);
-        p.add(new JLabel("Time (HH:MM):")); p.add(time);
-        p.add(new JLabel("Notes:")); p.add(new JScrollPane(notes));
+        JPanel p = new JPanel(new GridLayout(5, 2));
 
-        int res = JOptionPane.showConfirmDialog(this, p, "Book Appointment", JOptionPane.OK_CANCEL_OPTION);
-        if (res==JOptionPane.OK_OPTION) {
-            SwingWorker<Void,Void> w = new SwingWorker<>() {
-                protected Void doInBackground() throws Exception {
-                    try {
-                        Appointment a = new Appointment();
-                        a.setDoctorId(Integer.parseInt(doctorId.getText().trim()));
-                        a.setPatientId(patient.getId());
-                        a.setDate(LocalDate.parse(date.getText().trim()));
-                        a.setTime(LocalTime.parse(time.getText().trim()));
-                        a.setStatus("SCHEDULED"); a.setNotes(notes.getText());
-                        svc.bookAppointment(a);
-                    } catch (AppException ex) { throw ex; }
-                    return null;
-                }
-                protected void done() {
-                    try { get(); JOptionPane.showMessageDialog(PatientDashboard.this, "Appointment booked"); loadAppointments(); }
-                    catch (Exception ex) { JOptionPane.showMessageDialog(PatientDashboard.this, "Booking failed: " + ex.getMessage()); }
-                }
-            }; w.execute();
+        JTextField doctorId = new JTextField();
+        JTextField date = new JTextField(LocalDate.now().toString());
+        JTextField time = new JTextField(LocalTime.of(10, 0).toString());
+        JTextArea notes = new JTextArea(3, 20);
+    
+        p.add(new JLabel("Doctor ID:"));
+        p.add(doctorId);
+        p.add(new JLabel("Date (YYYY-MM-DD):"));
+        p.add(date);
+        p.add(new JLabel("Time (HH:MM):"));
+        p.add(time);
+        p.add(new JLabel("Notes:"));
+        p.add(new JScrollPane(notes));
+    
+        int res = JOptionPane.showConfirmDialog(
+                this,
+                p,
+                "Book Appointment",
+                JOptionPane.OK_CANCEL_OPTION
+        );
+    
+        if (res != JOptionPane.OK_OPTION) {
+            return;
         }
+    
+        // ===== CLIENT-SIDE VALIDATION =====
+        if (doctorId.getText().trim().isEmpty()
+                || date.getText().trim().isEmpty()
+                || time.getText().trim().isEmpty()) {
+    
+            JOptionPane.showMessageDialog(
+                    this,
+                    "All fields are mandatory.",
+                    "Validation Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+    
+        int docId;
+        try {
+            docId = Integer.parseInt(doctorId.getText().trim());
+            if (docId <= 0) throw new NumberFormatException();
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Doctor ID must be a valid positive number.",
+                    "Invalid Input",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+    
+        LocalDate appointmentDate;
+        LocalTime appointmentTime;
+    
+        try {
+            appointmentDate = LocalDate.parse(date.getText().trim());
+            appointmentTime = LocalTime.parse(time.getText().trim());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Invalid date or time format.\nUse YYYY-MM-DD and HH:MM",
+                    "Format Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+    
+        // ===== BACKGROUND THREAD (MULTITHREADING) =====
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+    
+            @Override
+            protected Void doInBackground() throws Exception {
+    
+                Appointment a = new Appointment();
+                a.setDoctorId(docId);
+                a.setPatientId(patient.getId());
+                a.setDate(appointmentDate);
+                a.setTime(appointmentTime);
+                a.setStatus("SCHEDULED");
+                a.setNotes(notes.getText());
+    
+                svc.bookAppointment(a); // synchronized DAO call
+                return null;
+            }
+    
+            @Override
+            protected void done() {
+                try {
+                    get();
+                    JOptionPane.showMessageDialog(
+                            PatientDashboard.this,
+                            "Appointment booked successfully!",
+                            "Success",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                    loadAppointments();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(
+                            PatientDashboard.this,
+                            "Booking failed: " + ex.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        };
+    
+        worker.execute();
     }
 
+   
     private void exportPdf() {
         try {
             File f = new File("appointments_" + patient.getId() + ".pdf");
