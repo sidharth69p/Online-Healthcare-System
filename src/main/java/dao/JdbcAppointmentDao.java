@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JdbcAppointmentDao implements AppointmentDao {
+    // Server-side validation and database operation:
+    // - Uses JDBC PreparedStatement to prevent SQL injection
+    // - Synchronized method ensures thread-safe appointment booking
+    // - Database constraints prevent duplicate appointment slots
 
     @Override
     public synchronized int create(Appointment a) throws AppException {
