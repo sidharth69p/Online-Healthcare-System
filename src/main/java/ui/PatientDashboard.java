@@ -81,7 +81,10 @@ public class PatientDashboard extends JFrame {
         p.add(time);
         p.add(new JLabel("Notes:"));
         p.add(new JScrollPane(notes));
-    
+
+        // Event handling using JOptionPane dialog:
+        // User actions (OK/Cancel) are handled through event-driven programming.
+
         int res = JOptionPane.showConfirmDialog(
                 this,
                 p,
@@ -138,6 +141,10 @@ public class PatientDashboard extends JFrame {
         }
     
         // ===== BACKGROUND THREAD (MULTITHREADING) =====
+        // Multithreading implementation:
+        // SwingWorker is used to execute appointment booking in a background thread
+        // to prevent UI freezing and ensure responsive user interaction.
+
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
     
             @Override
