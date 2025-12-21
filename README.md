@@ -61,6 +61,40 @@ UI Layer  →  Service Layer  →  DAO Layer  →  Database
 * `sql/` → Database schema
 
 ---
+## Error Handling & Data Validation
+
+The application implements robust error handling and validation to ensure system stability and prevent crashes.
+
+- Client-side validation is performed before processing user actions (e.g., empty fields, invalid formats).
+- User-friendly dialog messages are displayed for invalid inputs instead of terminating the application.
+- Server-side validation is enforced at the DAO layer using exception handling and database constraints.
+- All database-related exceptions are gracefully propagated and handled without application failure.
+
+---
+
+## Multithreading & Performance Optimization
+
+To ensure a responsive user interface and efficient processing, the system utilizes multithreading:
+
+- SwingWorker is used to perform long-running operations (such as appointment booking and data retrieval) in the background.
+- This prevents UI freezing and maintains smooth user interaction.
+- Background execution ensures thread safety while accessing shared resources such as appointment slots.
+
+---
+
+## Component Integration & Architecture
+
+The system follows a layered architecture to maintain clean separation of concerns:
+
+UI Layer → Service Layer → DAO Layer → Database
+
+- The UI layer handles user interaction and input validation.
+- The Service layer contains business logic and workflow management.
+- The DAO layer manages all database operations using JDBC and PreparedStatements.
+- This structure improves maintainability, scalability, and testability.
+
+---
+
 
 ## 📚 Features
 
